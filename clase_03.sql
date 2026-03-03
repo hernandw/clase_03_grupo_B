@@ -40,6 +40,12 @@ select nombre, length(nombre) as cantidad_caracteres from empleados;
 
 -- FUNCIONES DE AGREGADO
 
+-- count
+-- sum
+-- avg
+-- max
+-- min
+
 create table monedas (
 nombre VARCHAR(50)
 );
@@ -125,3 +131,116 @@ select count(distinct(monto)) as montos_distintos from ventas;
 
 select count(*) as "Cantidad registros Categoría Tools o Games" from ventas
 where lower(categoria) = 'tools' or lower(categoria) = 'games';
+
+
+select count(*) as "Registros Tools o Games" from ventas
+where lower(categoria) in ( 'Tools', 'games');
+
+
+
+select * from empleados;
+
+-- calcular el monto total de la nomina de empleados
+
+select round(sum(salario)) as Monto_mensual_nomina from empleados;
+
+-- promedio
+
+select round(avg(salario), 2) as salario_promedio from empleados;
+
+--calcular el salario maximo
+
+select max(salario) as maximo_salario from empleados;
+
+-- calcular el salario minimo
+select min(salario) as maximo_salario from empleados;
+
+
+select * from monedas;
+
+-- agrupar por categorias
+select lower(nombre) as moneda, count(*) as cantidad from monedas group by lower(nombre);
+
+select * from ventas;
+
+select categoria, count(*) as cantidad, sum(monto) as monto_venta_categoria from ventas group by categoria;
+
+-- ordenarlas
+select categoria, count(*) as cantidad, sum(monto) as monto_venta_categoria from ventas group by categoria order by sum(monto) asc;
+
+
+
+select * from empleados;
+
+select * from empleados order by nombre;
+
+select categoria, count(*) as cantidad, sum(monto) as monto_venta_categoria from ventas group by categoria;
+
+select categoria, count(*) as cantidad, sum(monto) as monto_venta_categoria from ventas group by categoria limit 3 offset 0;
+select categoria, count(*) as cantidad, sum(monto) as monto_venta_categoria from ventas group by categoria limit 3 offset 1;
+select categoria, count(*) as cantidad, sum(monto) as monto_venta_categoria from ventas group by categoria limit 3 offset 2;
+
+
+
+-- multiples tablas
+
+ select * from libros
+  inner join editoriales
+  on libros.codigoeditorial=editoriales.codigo;
+
+insert into editoriales(nombre) values('Planeta');
+ insert into editoriales(nombre) values('Emece');
+ insert into editoriales(nombre) values('Siglo XXI');
+
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('El aleph','Borges',2,20);
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('Martin Fierro','Jose Hernandez',1,30);
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('Aprenda PHP','Mario Molina',3,50);
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('Java en 10 minutos',default,3,45);
+
+
+
+create table libros(
+  codigo serial,
+  titulo varchar(40) not null,
+  autor varchar(30) not null default 'Desconocido',
+  codigoeditorial smallint not null,
+  precio decimal(5,2),
+  primary key (codigo)
+ );
+
+
+ create table editoriales(
+  codigo serial,
+  nombre varchar(20) not null,
+  primary key(codigo)
+ );
+
+ select * from libros;
+ select * from editoriales;
+
+
+insert into editoriales(nombre) values('Planeta');
+ insert into editoriales(nombre) values('Emece');
+ insert into editoriales(nombre) values('Siglo XXI');
+
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('El aleph','Borges',2,20);
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('Martin Fierro','Jose Hernandez',1,30);
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('Aprenda PHP','Mario Molina',3,50);
+ insert into libros(titulo,autor,codigoeditorial,precio) 
+  values('Java en 10 minutos',default,3,45);
+
+  select a.codigo, titulo, autor, precio, b.codigo as codigoeditorial, nombre as editorial  from libros a
+   join editoriales b
+  on a.codigoeditorial = b.codigo;
+
+select * from libros;
+ select * from editoriales;
+
+ delete from editoriales where codigo = 3;
